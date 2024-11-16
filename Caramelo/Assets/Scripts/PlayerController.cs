@@ -1,12 +1,15 @@
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
-{
-	
-	private bool jumping = false;
+public class PlayerController : MonoBehaviour {
 	
 	private Rigidbody2D body;
 	private Animator animator;
+	
+	/// -1: left
+	/// 1: right
+	private int direction = 1;
+	private float scale = 2;
+	private bool jumping = false;
 	
 	private Vector3 cameraOffset = new Vector3( 3.5f, 2f, -10f );
 	[SerializeField] public Camera mainCamera;
@@ -15,8 +18,7 @@ public class PlayerController : MonoBehaviour
 //	[SerializeField] public float jumpForce = 30f;
 	
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
+    void Start() {
 		
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
@@ -24,14 +26,18 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
 		
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
 		
-	//	animator.SetFloat("x", input.x);
-	//	animator.SetFloat("y", input.y);
+		/// lembrando que x pode ser 0
+		if( x < 0 ) direction = -1;
+		else if( x > 0 ) direction = 1;
+		
+		///
+		transform.localScale = new Vector3(direction * scale, scale, scale);
+		
 		
 		if( !jumping ) {
 			
@@ -42,7 +48,7 @@ public class PlayerController : MonoBehaviour
 				jumping = true;
 				
 			//	body.linearVelocity = new Vector2( 20f, 30f );
-				body.linearVelocity = new Vector2( 10f, 20f );
+				body.linearVelocity = new Vector2( direction * 10f, 20f );
 				
 			} else {
 				
@@ -52,17 +58,9 @@ public class PlayerController : MonoBehaviour
 				
 			}
 			
-		} else {
-			
-			/// debug
-			if( x < 0 )
-				transform.position = new Vector3(-7f,-2f,0f);
-			
 		}
 				
 		mainCamera.transform.position = transform.position + cameraOffset;
-		
-		
 		
     }
 	
