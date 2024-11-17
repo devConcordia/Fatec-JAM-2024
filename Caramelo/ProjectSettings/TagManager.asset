@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Ground
   - Water
+  - Helicopter
+  - Stem
+  - Letter
   layers:
   - Default
   - TransparentFX
